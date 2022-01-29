@@ -1,0 +1,51 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kubectl-proxy
+  namespace: monitoring
+  labels:
+    app: kubectl-proxy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kubectl-proxy
+  template:
+    metadata:
+      labels:
+        app: kubectl-proxy
+    spec:
+      containers:
+        - name: kubectl-proxy
+          args:
+            - proxy
+            - --address=0.0.0.0
+            - --accept-hosts=.*
+            - --reject-methods=POST,PUT,PATCH
+            - -v5
+          image: bitnami/kubectl:1.21
+          ports:
+            - containerPort: 8001
+        - name: openresty-log
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - apt install -y cmake && /usr/local/openresty/luajit/bin/luarocks install rapidjson && /usr/local/openresty/bin/openresty -g "daemon off;"
+          image: openresty/openresty:1.19.9.1-5-bionic
+          ports:
+            - containerPort: 8002
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: openresty-config
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      serviceAccount: kubectl-proxy
+      serviceAccountName: kubectl-proxy
+      volumes:
+        - name: openresty-config
+          configMap:
+            name: kubectl-proxy-openresty-config
+
