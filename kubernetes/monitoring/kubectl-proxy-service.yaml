@@ -4,7 +4,6 @@ metadata:
   labels:
     app: kubectl-proxy
   name: kubectl-proxy
-  namespace: monitoring
 spec:
   ports:
     - port: 80

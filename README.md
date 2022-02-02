@@ -62,9 +62,11 @@ The example setup looks like:
                  └──────────────┘
 ```
 
+There are several options to run a demo Kubernetes on laptop, see more details here: [Environment for comparing several on-premise Kubernetes distributions (K3s, MicroK8s, KinD, kubeadm)](https://faun.pub/environment-for-comparing-several-on-premise-kubernetes-distributions-k3s-kind-kubeadm-a53675a80a00). The `make all` command deploys JSON API datasource plugin with configuration. The [pgillich-tree-panel](https://github.com/pgillich/grafana-tree-panel) plugin is also included.
+
 ## Adapter Pod
 
-Deployment files of Adapter Pod can be found in [kubernetes/monitoring](kubernetes/monitoring) directory. These files can be deployed by `kubectl apply -f` commands or can be integrated to a Kustomize or Helm deployment.
+Deployment files of Adapter Pod can be found in [kubernetes/monitoring](kubernetes/monitoring) directory. These files can be deployed by `kubectl apply -k kubernetes/monitoring` command.
 
 The `kubect proxy` is configured to deny any modification requests, see at `kubectl-proxy-deployment.yaml`. Other access limitations are configured in `kubectl-proxy-clusterRole.yaml`.
 
