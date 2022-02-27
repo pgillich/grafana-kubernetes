@@ -1,0 +1,250 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_DKRON_API",
+      "label": "Dkron API",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "marcusolsson-json-datasource",
+      "pluginName": "JSON API"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.1.1"
+    },
+    {
+      "type": "datasource",
+      "id": "marcusolsson-json-datasource",
+      "name": "JSON API",
+      "version": "1.3.1"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "${DS_DKRON_API}",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [
+            {
+              "options": {
+                "failed": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "FAILED"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Status$/",
+          "values": true
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "fields": [
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next, \"last\": $substring($replace($v.status = \"failed\" ? $v.last_error : $v.last_success, \"T\", \" \"), 0, 16)}}).name",
+              "language": "jsonata",
+              "name": "Name",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next, \"last\": $substring($replace($v.status = \"failed\" ? $v.last_error : $v.last_success, \"T\", \" \"), 0, 16)}}).status",
+              "language": "jsonata",
+              "name": "Status",
+              "type": "string"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": "/v1/jobs "
+        }
+      ],
+      "title": "Job status",
+      "type": "stat"
+    },
+    {
+      "datasource": "${DS_DKRON_API}",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "failed": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "FAILED"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 3,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "fields": [
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next}}).name",
+              "language": "jsonata",
+              "name": "Name"
+            },
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next}}).status",
+              "language": "jsonata",
+              "name": "Status"
+            },
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next}}).last_success",
+              "language": "jsonata",
+              "name": "Last Success"
+            },
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next}}).last_error",
+              "language": "jsonata",
+              "name": "Last Error"
+            },
+            {
+              "jsonPath": "$map($, function($v) {{\"name\": $v.name, \"status\": $v.status, \"last_success\": $v.last_success, \"last_error\": $v.last_error, \"next\": $v.next}}).next",
+              "language": "jsonata",
+              "name": "Next"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": "/v1/jobs "
+        }
+      ],
+      "title": "Job status",
+      "type": "table"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Dkron",
+  "uid": "4Wvdllbnk",
+  "version": 17
+}

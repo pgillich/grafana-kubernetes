@@ -135,12 +135,12 @@
           "cacheDurationSeconds": 300,
           "fields": [
             {
-              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status=\"Running\"}).status",
+              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status=\"Running\" or $v.status=\"Succeeded\"}).status",
               "language": "jsonata",
               "name": "Namespace"
             },
             {
-              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status=\"Running\"}).count",
+              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status=\"Running\" or $v.status=\"Succeeded\"}).count",
               "language": "jsonata",
               "name": ""
             }
@@ -207,12 +207,12 @@
           "cacheDurationSeconds": 300,
           "fields": [
             {
-              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status!=\"Running\"}).status",
+              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status!=\"Running\" and $v.status!=\"Succeeded\"}).status",
               "language": "jsonata",
               "name": "Namespace"
             },
             {
-              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status!=\"Running\"}).count",
+              "jsonPath": "$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{\"status\": $k, \"count\": $v}}), function($v) {$v.status!=\"Running\" and $v.status!=\"Succeeded\"}).count",
               "language": "jsonata",
               "name": ""
             }
@@ -401,6 +401,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "Status",
-  "uid": "VmTz2Hb7z",
-  "version": 7
+  "uid": "8KblB1-7z",
+  "version": 2
 }
