@@ -27,6 +27,17 @@ spec:
           image: bitnami/kubectl:1.21
           ports:
             - containerPort: 8001
+        - name: kubectl-ext
+          env:
+            - name: LOGLEVEL
+              value: "debug"
+            - name: PROXY_TARGETURL
+              value: "http://localhost:8001"
+            - name: PROXY_LISTENADDR
+              value: ":8003"
+          image: pgillich/kubeproxy-ext:v0.1.4
+          ports:
+            - containerPort: 8003
         - name: openresty-log
           command:
             - /bin/sh

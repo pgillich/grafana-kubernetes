@@ -18,11 +18,19 @@ The example setup looks like:
      │                                          │     │                      │
      │                 Grafana                  │     │     Adapter Pod      │
      │                                          │     │                      │
-     │   ┌──────────────┐    ┌──────────────┐   │     │   ┌──────────────┐   │     ┌──────────────┐
-     │   │              │    │              │   │     │   │              │   │     │              │
-     │   │  Pod info:   │    │   JSON API   │   │     │   │   kubectl    │   │     │  Kubernetes  │
-     │   │ Table, Stat  │◄───┤   datasurce  │◄──┼─────┼───┤    proxy     │◄──┼─────┤     API      │
-┌────┼───┤ panel plugin │    │    plugin    │   │     │   │              │   │     │              │
+     │   ┌──────────────┐    ┌──────────────┐   │     │   ┌──────────────┐   │
+     │   │              │    │              │   │     │   │              │   │
+     │   │  Pod info:   │    │   JSON API   │   │     │   │   kubectl    │   │
+     │   │ Table, Stat  │◄───┤   datasurce  │◄──┼─────┼───┤     ext      │   │
+┌────┼───┤ panel plugin │    │    plugin    │   │     │   │              │   │
+│    │   │              │    │              │   │     │   │              │   │
+│    │   └──────────────┘    └──────────────┘   │     │   └──────▲───────┘   │
+│    │                                          │     │          │           │
+│    │   ┌──────────────┐    ┌──────────────┐   │     │   ┌──────┴───────┐   │     ┌──────────────┐
+│    │   │              │    │              │   │     │   │              │   │     │              │
+│    │   │  Pod info:   │    │   JSON API   │   │     │   │   kubectl    │   │     │  Kubernetes  │
+│    │   │ Table, Stat  │◄───┤   datasurce  │◄──┼─────┼───┤    proxy     │◄──┼─────┤     API      │
+├────┼───┤ panel plugin │    │    plugin    │   │     │   │              │   │     │              │
 │    │   │              │  ┌─┤              │   │     │   │              │   │     │              │
 │    │   └──────────────┘  │ └──────────────┘   │     │   └──────────────┘   │     └──────┬───────┘
 │    │                     │                    │     │                      │            │
@@ -72,6 +80,19 @@ The `kubect proxy` is configured to deny any modification requests, see at `kube
 
 A simple LUA code transforms the raw log lines to JSON array, see `kubectl-proxy-openresty-config.yaml`.
 
+Example requests to the adapter pod from the Grafana container:
+
+```sh
+export GRAFANA_POD=$(kubectl get pod -n monitoring -l 'app.kubernetes.io/name=grafana' -o name | sed 's#^pod/##g');
+
+kubectl exec -n monitoring ${GRAFANA_POD} -c grafana -- /bin/sh -c 'wget -q -O - http://kubectl-proxy/api/v1/namespaces/monitoring/pods'
+
+kubectl exec -n monitoring ${GRAFANA_POD} -c grafana -- /bin/sh -c 'wget -q -O - http://kubectl-proxy:8002/api/v1/namespaces/monitoring/pods/alertmanager-prometheus-st
+ack-kube-prom-alertmanager-0/log?container=alertmanager'
+
+kubectl exec -n monitoring ${GRAFANA_POD} -c grafana -- /bin/sh -c 'wget -q -O - http://kubectl-proxy:8003/api/v1/namespaces/monitoring/pods'
+```
+
 ## Datasource configuration
 
 Example configurations:
@@ -88,7 +109,19 @@ Raw Kubernetes responses should be transformed to a flat JSON array, substitutin
 $map(items, function($v) {{"namespace": $v.metadata.namespace, "name": $v.metadata.name, "appName": $v.metadata.labels."app.kubernetes.io/name" ? $v.metadata.labels."app.kubernetes.io/name" : "-", "statusPhase": $v.status.phase, "containerCount": $count($v.spec.containers), "containerImage": $join($v.spec.containers[*].image, " "), "containerState": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : "-"}})
 ```
 
-Importable Grafana Dashboard files can be found in [grafana/dashboards](grafana/dashboards) directory.
+JSONAta expressions can be evaluated by `jfq`. It can be installed by below command:
+
+```sh
+npm install --global jfq
+```
+
+Example usage:
+
+```sh
+jfq '$filter($each(items{status.phase: $count(status.phase)}, function($v, $k) {{"status": $k, "count": $v}}), function($v) {$v.status="Running" or $v.status="Succeeded"})' /tmp/pods.json
+```
+
+Importable Grafana Dashboard files can be found in [grafana/dashboards](grafana/dashboards) directory. The `*(ext).json` dashboards use `kubectl-ext` container as a data source.
 
 ### Namespace and All Pods
 

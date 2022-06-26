@@ -1,0 +1,696 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_K8S_EXT API",
+      "label": "K8s ext API",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "marcusolsson-json-datasource",
+      "pluginName": "JSON API"
+    },
+    {
+      "name": "VAR_DASHBOARDURL",
+      "type": "constant",
+      "label": "DashboardUrl",
+      "value": "https://monitoring.kind-01.company.com/kubernetes",
+      "description": ""
+    }
+  ],
+  "__elements": [],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.3.3"
+    },
+    {
+      "type": "datasource",
+      "id": "marcusolsson-json-datasource",
+      "name": "JSON API",
+      "version": "1.3.1"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1656265255088,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "${DS_K8S_EXT API}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "${DS_K8S_EXT API}"
+          },
+          "fields": [
+            {
+              "jsonPath": "items.kubectl.Status",
+              "language": "jsonata",
+              "name": "Status"
+            },
+            {
+              "jsonPath": "items.kubectl.Status",
+              "language": "jsonata",
+              "name": "Count"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": "/api/v1/pods"
+        }
+      ],
+      "title": "All Pod Status, Running",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Running"
+                  }
+                },
+                "fieldName": "Status"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Count": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              },
+              "Status": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "${DS_K8S_EXT API}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "${DS_K8S_EXT API}"
+          },
+          "fields": [
+            {
+              "jsonPath": "items.kubectl.Status",
+              "language": "jsonata",
+              "name": "Status"
+            },
+            {
+              "jsonPath": "items.kubectl.Status",
+              "language": "jsonata",
+              "name": "Count"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": "/api/v1/pods"
+        }
+      ],
+      "title": "All Pod Status, Completed",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Completed"
+                  }
+                },
+                "fieldName": "Status"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Count": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              },
+              "Status": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "${DS_K8S_EXT API}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 14,
+        "x": 10,
+        "y": 0
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "${DS_K8S_EXT API}"
+          },
+          "fields": [
+            {
+              "jsonPath": "items.kubectl.Status",
+              "language": "jsonata",
+              "name": "Status"
+            },
+            {
+              "jsonPath": "items.kubectl.Status",
+              "language": "jsonata",
+              "name": "Count"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": "/api/v1/pods"
+        }
+      ],
+      "title": "All Pod Status, Other",
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Running"
+                  }
+                },
+                "fieldName": "Status"
+              },
+              {
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "Completed"
+                  }
+                },
+                "fieldName": "Status"
+              }
+            ],
+            "match": "any",
+            "type": "exclude"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Count": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              },
+              "Status": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "${DS_K8S_EXT API}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": true
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Dashboard",
+              "url": "${DashboardUrl}/#/pod/${__data.fields.Namespace}/${__data.fields.Name}?namespace=${__data.fields.Namespace}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "image"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 370
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Namespace"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 235
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 403
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 139
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Image"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 646
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Containers"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "App"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 145
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ready"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 98
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 2,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Status"
+          }
+        ]
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "${DS_K8S_EXT API}"
+          },
+          "fields": [
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).namespace",
+              "language": "jsonata",
+              "name": "Namespace",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).appName",
+              "language": "jsonata",
+              "name": "App"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).name",
+              "language": "jsonata",
+              "name": "Name",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).statusPhase",
+              "language": "jsonata",
+              "name": "Status",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"ready\": $v.kubectl.Ready,\"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).ready",
+              "language": "jsonata",
+              "name": "Ready"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).containerCount",
+              "language": "jsonata",
+              "name": "Containers"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).containerImage",
+              "language": "jsonata",
+              "name": "Image",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$map(items, function($v) {{\"namespace\": $v.metadata.namespace, \"name\": $v.metadata.name, \"appName\": $v.metadata.labels.\"app.kubernetes.io/name\" ? $v.metadata.labels.\"app.kubernetes.io/name\" : \"-\", \"statusPhase\": $v.kubectl.Status, \"containerCount\": $count($v.spec.containers), \"containerImage\": $join($v.spec.containers[*].image, \" \"), \"containerState\": $v.status.containerStatuses ? $string($v.status.containerStatuses[*].state) : \"-\"}}).containerState",
+              "language": "jsonata",
+              "name": "State",
+              "type": "string"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": "/api/v1/pods"
+        }
+      ],
+      "title": "All Pods",
+      "type": "table"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 34,
+  "style": "dark",
+  "tags": [
+    "Detailed"
+  ],
+  "templating": {
+    "list": [
+      {
+        "hide": 2,
+        "name": "DashboardUrl",
+        "query": "${VAR_DASHBOARDURL}",
+        "skipUrlSync": false,
+        "type": "constant",
+        "current": {
+          "value": "${VAR_DASHBOARDURL}",
+          "text": "${VAR_DASHBOARDURL}",
+          "selected": false
+        },
+        "options": [
+          {
+            "value": "${VAR_DASHBOARDURL}",
+            "text": "${VAR_DASHBOARDURL}",
+            "selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "All Pods (ext)",
+  "uid": "YPgdlrJ7zAll",
+  "version": 17,
+  "weekStart": ""
+}

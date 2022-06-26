@@ -12,5 +12,8 @@ spec:
     - port: 8002
       targetPort: 8002
       name: log
+    - port: 8003
+      targetPort: 8003
+      name: ext
   selector:
     app: kubectl-proxy
